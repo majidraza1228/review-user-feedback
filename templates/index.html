@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}FeedbackLoop — Products{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Products</h1>
+    <p class="page-subtitle">Rate and review the tools you use every day.</p>
+</div>
+
+<div class="card-grid">
+    {% for product in products %}
+    <div class="card">
+        <div class="card-header">
+            <span class="card-category">{{ product.category }}</span>
+        </div>
+        <h2 class="card-title">{{ product.name }}</h2>
+        <p class="card-description">{{ product.description[:120] }}{% if product.description|length > 120 %}…{% endif %}</p>
+        <div class="card-footer">
+            <div class="card-rating">
+                {% if product.avg_rating %}
+                    <span class="rating-stars">
+                        {% for i in range(1, 6) %}
+                            <span class="star {% if i <= product.avg_rating|round %}star-filled{% endif %}">★</span>
+                        {% endfor %}
+                    </span>
+                    <span class="rating-value">{{ product.avg_rating }}</span>
+                    <span class="rating-count">({{ product.review_count }} review{% if product.review_count != 1 %}s{% endif %})</span>
+                {% else %}
+                    <span class="no-reviews">No reviews yet</span>
+                {% endif %}
+            </div>
+            <a href="/product/{{ product.id }}" class="btn btn-primary">Leave a Review</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

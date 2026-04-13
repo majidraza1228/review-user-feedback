@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Admin — FeedbackLoop{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Admin Dashboard</h1>
+    <p class="page-subtitle">All feedback across all products. Newest first.</p>
+    <div class="admin-note">
+        No auth required — this is a local demo. See <code>product-os/decisions/log.md</code> (DEC-001).
+    </div>
+</div>
+
+{% if feedback %}
+<div class="table-wrapper">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Reviewer</th>
+                <th>Rating</th>
+                <th>Comment</th>
+                <th>Submitted</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in feedback %}
+            <tr>
+                <td><a href="/product/{{ row.id }}" class="table-link">{{ row.product_name }}</a></td>
+                <td>{{ row.reviewer_name }}</td>
+                <td class="rating-cell">
+                    {% for i in range(1, 6) %}
+                        <span class="star {% if i <= row.rating %}star-filled{% endif %}">★</span>
+                    {% endfor %}
+                </td>
+                <td class="comment-cell">{{ row.comment }}</td>
+                <td class="date-cell">{{ row.created_at[:10] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="empty-state-box">
+    <p class="empty-state">No feedback yet. Seed the database with <code>python seed.py</code>.</p>
+</div>
+{% endif %}
+{% endblock %}

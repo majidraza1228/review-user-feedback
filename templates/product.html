@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} — FeedbackLoop{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <a href="/" class="back-link">← All Products</a>
+    <div class="product-meta">
+        <span class="card-category">{{ product.category }}</span>
+    </div>
+    <h1 class="page-title">{{ product.name }}</h1>
+    <p class="page-subtitle">{{ product.description }}</p>
+    {% if avg_rating %}
+    <div class="product-rating">
+        <span class="rating-stars rating-stars-lg">
+            {% for i in range(1, 6) %}
+                <span class="star {% if i <= avg_rating|round %}star-filled{% endif %}">★</span>
+            {% endfor %}
+        </span>
+        <span class="rating-value">{{ avg_rating }} avg</span>
+        <span class="rating-count">({{ reviews|length }} review{% if reviews|length != 1 %}s{% endif %})</span>
+    </div>
+    {% endif %}
+</div>
+
+<div class="two-col">
+    <div class="two-col-main">
+        <h2 class="section-title">Reviews</h2>
+        {% if reviews %}
+            <div class="reviews-list">
+                {% for review in reviews %}
+                <div class="review">
+                    <div class="review-header">
+                        <span class="review-author">{{ review.reviewer_name }}</span>
+                        <span class="review-stars">
+                            {% for i in range(1, 6) %}
+                                <span class="star {% if i <= review.rating %}star-filled{% endif %}">★</span>
+                            {% endfor %}
+                        </span>
+                        <span class="review-date">{{ review.created_at[:10] }}</span>
+                    </div>
+                    <p class="review-comment">{{ review.comment }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="empty-state">No reviews yet. Be the first!</p>
+        {% endif %}
+    </div>
+
+    <div class="two-col-aside">
+        <div class="form-card">
+            <h2 class="section-title">Leave a Review</h2>
+            <form id="feedback-form" class="feedback-form">
+                <input type="hidden" id="product-id" value="{{ product.id }}">
+
+                <div class="form-group">
+                    <label class="form-label">Your Rating</label>
+                    <div class="star-rating" id="star-rating">
+                        {% for i in range(1, 6) %}
+                        <span class="star-input" data-value="{{ i }}">★</span>
+                        {% endfor %}
+                    </div>
+                    <input type="hidden" id="rating-value" value="">
+                    <div class="form-error" id="rating-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="reviewer-name">Your Name (optional)</label>
+                    <input type="text" id="reviewer-name" class="form-input" placeholder="Anonymous">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="comment">Comment</label>
+                    <textarea id="comment" class="form-textarea" placeholder="What did you think?" rows="4"></textarea>
+                    <div class="form-error" id="comment-error"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full">Submit Review</button>
+                <div class="form-success" id="form-success"></div>
+                <div class="form-error" id="form-error"></div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
