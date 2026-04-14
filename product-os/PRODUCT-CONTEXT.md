@@ -69,4 +69,11 @@ A dead-simple web app: list your products, collect 1–5 star ratings + comments
 
 ## Hub Reference
 
-Templates live at `~/ai-products-os/`. Never duplicate template content here.
+| Resource | Location |
+|----------|---------|
+| Hub repo (templates) | https://github.com/majidraza1228/ai-products-os |
+| Local hub clone | `~/ai-products-os/` |
+| Blueprint to copy | `~/ai-products-os/08_blueprint/product-os/` |
+| This project repo | https://github.com/majidraza1228/review-user-feedback |
+
+Never duplicate template content here. Fill in `product-os/` files only.
