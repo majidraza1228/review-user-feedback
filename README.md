@@ -146,6 +146,52 @@ python seed.py       # seeds 6 products + 20 reviews
 
 ---
 
+## Architecture diagram (Mermaid)
+
+```mermaid
+flowchart TD
+    A[Browser] -->|GET /| B[index()]
+    A -->|GET /product/<id>| C[product(product_id)]
+    A -->|GET /admin| D[admin()]
+    A -->|POST /api/feedback JSON| E[submit_feedback()]
+
+    subgraph Flask App [Flask app.py]
+      B --> T1[render index.html]
+      C --> T2[render product.html]
+      D --> T3[render admin.html]
+      E --> J1[return JSON success/error]
+    end
+
+    subgraph Frontend [Templates + Static]
+      T1 --> H1[base.html + index.html]
+      T2 --> H2[base.html + product.html]
+      T3 --> H3[base.html + admin.html]
+      H2 --> S1[static/main.js<br/>star widget + fetch]
+      H1 --> S2[static/style.css]
+      H2 --> S2
+      H3 --> S2
+    end
+
+    subgraph DB [SQLite database.db]
+      P[(products)]
+      F[(feedback)]
+    end
+
+    B -->|SELECT products + AVG/COUNT feedback| P
+    B -->|LEFT JOIN feedback| F
+    C -->|SELECT product by id| P
+    C -->|SELECT feedback by product_id| F
+    D -->|JOIN feedback + products| F
+    D -->|JOIN feedback + products| P
+    E -->|validate + INSERT feedback| F
+    E -->|check product exists| P
+
+    Z[seed.py] -->|INSERT 6 products| P
+    Z -->|INSERT 20 feedback rows| F
+```
+
+---
+
 ## API
 
 ```bash
